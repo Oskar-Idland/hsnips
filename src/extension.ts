@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'fs';
 import * as path from 'path';
-import { openExplorer } from './openFileExplorer';
 import { HSnippet } from './hsnippet';
 import { HSnippetInstance } from './hsnippetInstance';
 import { parse } from './parser';
@@ -92,7 +91,11 @@ export function activate(context: vscode.ExtensionContext) {
     loadSnippets();
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => openExplorer(getSnippetDir()))
+        vscode.commands.registerCommand('hsnips.openSnippetsDir', () => {
+            // placeholder is there in order to open inside the snippet dir instead of outside
+            const uri = vscode.Uri.file(path.join(getSnippetDir(), "placeholder"))
+            vscode.commands.executeCommand('revealFileInOS', uri)
+        })
     );
 
     context.subscriptions.push(
